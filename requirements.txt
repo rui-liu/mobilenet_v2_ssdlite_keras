@@ -1,0 +1,11 @@
+h5py==2.8.0
+matplotlib==3.0.2
+numpy==1.18.1
+tqdm==4.28.1
+Keras==2.3.1
+beautifulsoup4==4.8.2
+imageio==2.8.0
+Pillow==7.0.0
+scikit_learn==0.22.1
+tensorflow-gpu==2.1.0
+opencv_python==4.2.0.32
