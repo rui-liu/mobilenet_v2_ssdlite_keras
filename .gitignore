@@ -2,3 +2,4 @@ venv
 .history
 __pycache__
 .idea
+.vscode

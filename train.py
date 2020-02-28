@@ -12,11 +12,15 @@ from utils.coco import get_coco_category_maps
 from utils.ssd_input_encoder import SSDInputEncoder
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras.utils.vis_utils import plot_model
+import tensorflow as tf
 
+physical_devices = tf.config.experimental.list_physical_devices('GPU')
+assert len(physical_devices) > 0, "Not enough GPU hardware devices available"
+tf.config.experimental.set_memory_growth(physical_devices[0], True)
 
 
 # model config
-batch_size = 16
+batch_size = 18
 image_size = (300, 300, 3)
 n_classes = 92
 mode = 'training'
@@ -46,10 +50,10 @@ return_predictor_sizes = False
 K.clear_session()
 
 # file paths
-train_images_dir = 'd:/COCO_2017/train2017/'
-train_annotations_filename = 'd:/COCO_2017/annotations/stuff_train2017.json'
-val_images_dir = 'd:/COCO_2017/val2017/'
-val_annotations_filename = 'd:/COCO_2017/annotations/stuff_val2017.json'
+train_images_dir = 'c:/COCO_2017/train2017/'
+train_annotations_filename = 'c:/COCO_2017/annotations/stuff_train2017.json'
+val_images_dir = 'c:/COCO_2017/val2017/'
+val_annotations_filename = 'c:/COCO_2017/annotations/stuff_val2017.json'
 log_dir = 'ssd_keras_logs/'
 
 
@@ -192,6 +196,6 @@ callbacks = [LearningRateScheduler(schedule=lr_schedule, verbose=1),
                  os.path.join(log_dir, "ssdseg_coco_{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}.h5"),
                  monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=True)]
 
-model.fit_generator(train_generator, epochs=1000, steps_per_epoch=1000,
+model.fit_generator(train_generator, epochs=1000, steps_per_epoch=train_dataset_size/batch_size,
                     callbacks=callbacks, validation_data=val_generator,
-                    validation_steps=100, initial_epoch=0)
+                    validation_steps=val_dataset_size/batch_size, initial_epoch=0)
