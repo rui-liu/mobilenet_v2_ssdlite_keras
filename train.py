@@ -10,12 +10,15 @@ from utils.object_detection_2d_photometric_ops import ConvertTo3Channels
 from utils.data_augmentation_chain_original_ssd import SSDDataAugmentation
 from utils.coco import get_coco_category_maps
 from utils.ssd_input_encoder import SSDInputEncoder
-from keras.callbacks import TensorBoard, ModelCheckpoint, LearningRateScheduler
+from keras.callbacks import ModelCheckpoint, LearningRateScheduler
+from keras.utils.vis_utils import plot_model
+
+
 
 # model config
 batch_size = 16
 image_size = (300, 300, 3)
-n_classes = 80
+n_classes = 92
 mode = 'training'
 l2_regularization = 0.0005
 min_scale = 0.1
@@ -97,8 +100,9 @@ model = mobilenet_v2_ssd(image_size, n_classes, mode, l2_regularization, min_sca
                          nms_max_output_size, return_predictor_sizes)
 
 # load weights
-weights_path = '../pretrained_weights/ssdlite_coco_loss-4.8205_val_loss-4.1873.h5'
-model.load_weights(weights_path, by_name=True)
+weights_path = 'pretrained_weights/ssdlite_coco_loss-4.8205_val_loss-4.1873.h5'
+# model.load_weights(weights_path, by_name=True)
+plot_model(model, "model.png", show_shapes=True, expand_nested=True)
 
 # compile the model
 adam = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=1e-08, decay=0.0)
@@ -183,7 +187,7 @@ print("Number of images in the training dataset:\t{:>6}".format(train_dataset_si
 print("Number of images in the validation dataset:\t{:>6}".format(val_dataset_size))
 
 callbacks = [LearningRateScheduler(schedule=lr_schedule, verbose=1),
-             TensorBoard(log_dir=log_dir, histogram_freq=0, write_graph=True, write_images=False),
+             # TensorBoard(log_dir=log_dir, histogram_freq=0, write_graph=True, write_images=False),
              ModelCheckpoint(
                  os.path.join(log_dir, "ssdseg_coco_{epoch:02d}_loss-{loss:.4f}_val_loss-{val_loss:.4f}.h5"),
                  monitor='val_loss', verbose=1, save_best_only=True, save_weights_only=True)]
