@@ -1,5 +1,7 @@
 import os
 import re
+
+import tensorflow as tf
 from keras.optimizers import Adam
 from keras import backend as K
 from models.keras_mobilenet_v2_ssdlite import mobilenet_v2_ssd
@@ -12,7 +14,7 @@ from utils.coco import get_coco_category_maps
 from utils.ssd_input_encoder import SSDInputEncoder
 from keras.callbacks import ModelCheckpoint, LearningRateScheduler
 from keras.utils.vis_utils import plot_model
-import tensorflow as tf
+
 
 physical_devices = tf.config.experimental.list_physical_devices('GPU')
 assert len(physical_devices) > 0, "Not enough GPU hardware devices available"
@@ -50,10 +52,10 @@ return_predictor_sizes = False
 K.clear_session()
 
 # file paths
-train_images_dir = 'c:/COCO_2017/train2017/'
-train_annotations_filename = 'c:/COCO_2017/annotations/stuff_train2017.json'
-val_images_dir = 'c:/COCO_2017/val2017/'
-val_annotations_filename = 'c:/COCO_2017/annotations/stuff_val2017.json'
+train_images_dir = 'COCO_2017/train2017/'
+train_annotations_filename = 'COCO_2017/annotations/stuff_train2017.json'
+val_images_dir = 'COCO_2017/val2017/'
+val_annotations_filename = 'COCO_2017/annotations/stuff_val2017.json'
 log_dir = 'ssd_keras_logs/'
 
 
@@ -104,8 +106,8 @@ model = mobilenet_v2_ssd(image_size, n_classes, mode, l2_regularization, min_sca
                          nms_max_output_size, return_predictor_sizes)
 
 # load weights
-weights_path = 'pretrained_weights/ssdlite_coco_loss-4.8205_val_loss-4.1873.h5'
-# model.load_weights(weights_path, by_name=True)
+weights_path = 'ssd_keras_logs\ssdseg_coco_04_loss-5.9329_val_loss-6.1844.h5'
+model.load_weights(weights_path, by_name=True)
 plot_model(model, "model.png", show_shapes=True, expand_nested=True)
 
 # compile the model

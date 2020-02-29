@@ -6,3 +6,5 @@ scikit-learn==0.22.1
 pillow==7.0.0
 tqdm==4.42.1
 beautifulsoup4==4.8.2
+imageio==2.6.1
+matplotlib=3.1.3
